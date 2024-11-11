@@ -12,7 +12,7 @@
     </style>
 </head>
 <body>
-      <h1>Telefon Numarası Doğrulama</h1>
+    <h1>Telefon Numarası Doğrulama</h1>
     <input type="text" id="phoneNumber" placeholder="Telefon Numarası" />
     <button onclick="checkNumber()">Numarayı Kontrol Et</button>
     
@@ -21,15 +21,25 @@
     <script>
         function checkNumber() {
             var phoneNumber = document.getElementById('phoneNumber').value;
-            var parsedNumber = libphonenumber.parsePhoneNumber(phoneNumber);
 
-            if (parsedNumber.isValid()) {
-                document.getElementById('result').innerHTML = `
-                    <p><strong>Ülke:</strong> ${parsedNumber.country}</p>
-                    <p><strong>Numara Tipi:</strong> ${parsedNumber.getType()}</p>
-                `;
-            } else {
-                document.getElementById('result').innerHTML = "Geçersiz telefon numarası!";
+            try {
+                // libphonenumber ile telefon numarasını analiz et
+                var parsedNumber = libphonenumber.parsePhoneNumber(phoneNumber);
+                
+                // Geçerli bir numara olup olmadığını kontrol et
+                if (parsedNumber.isValid()) {
+                    // Geçerli numara ise ülke ve numara tipi bilgilerini göster
+                    document.getElementById('result').innerHTML = `
+                        <p><strong>Ülke:</strong> ${parsedNumber.country}</p>
+                        <p><strong>Numara Tipi:</strong> ${parsedNumber.getType()}</p>
+                    `;
+                } else {
+                    // Geçersiz numara uyarısı
+                    document.getElementById('result').innerHTML = "Geçersiz telefon numarası!";
+                }
+            } catch (error) {
+                // Hata mesajı
+                document.getElementById('result').innerHTML = "Numara doğrulama hatası: " + error.message;
             }
         }
     </script>
