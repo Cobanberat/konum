@@ -12,6 +12,27 @@
     </style>
 </head>
 <body>
+      <h1>Telefon Numarası Doğrulama</h1>
+    <input type="text" id="phoneNumber" placeholder="Telefon Numarası" />
+    <button onclick="checkNumber()">Numarayı Kontrol Et</button>
+    
+    <div id="result"></div>
+
+    <script>
+        function checkNumber() {
+            var phoneNumber = document.getElementById('phoneNumber').value;
+            var parsedNumber = libphonenumber.parsePhoneNumber(phoneNumber);
+
+            if (parsedNumber.isValid()) {
+                document.getElementById('result').innerHTML = `
+                    <p><strong>Ülke:</strong> ${parsedNumber.country}</p>
+                    <p><strong>Numara Tipi:</strong> ${parsedNumber.getType()}</p>
+                `;
+            } else {
+                document.getElementById('result').innerHTML = "Geçersiz telefon numarası!";
+            }
+        }
+    </script>
         <h1>IP ile Konum Bilgisi</h1>
     <p>Ülke: <span id="country"></span></p>
     <p>Bölge: <span id="region"></span></p>
