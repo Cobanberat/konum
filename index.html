@@ -12,35 +12,38 @@
     </style>
 </head>
 <body>
-    <h1>Telefon Numarası Doğrulama</h1>
+     <h1>Telefon Numarası Doğrulama</h1>
     <input type="text" id="phoneNumber" placeholder="Telefon Numarası" />
     <button onclick="checkNumber()">Numarayı Kontrol Et</button>
     
     <div id="result"></div>
 
     <script>
+        const apiKey = '49a565d6102b93ca08281abf56046390'; // API Anahtarınız
+
         function checkNumber() {
             var phoneNumber = document.getElementById('phoneNumber').value;
 
-            try {
-                // libphonenumber ile telefon numarasını analiz et
-                var parsedNumber = libphonenumber.parsePhoneNumber(phoneNumber);
-                
-                // Geçerli bir numara olup olmadığını kontrol et
-                if (parsedNumber.isValid()) {
-                    // Geçerli numara ise ülke ve numara tipi bilgilerini göster
-                    document.getElementById('result').innerHTML = `
-                        <p><strong>Ülke:</strong> ${parsedNumber.country}</p>
-                        <p><strong>Numara Tipi:</strong> ${parsedNumber.getType()}</p>
-                    `;
-                } else {
-                    // Geçersiz numara uyarısı
-                    document.getElementById('result').innerHTML = "Geçersiz telefon numarası!";
-                }
-            } catch (error) {
-                // Hata mesajı
-                document.getElementById('result').innerHTML = "Numara doğrulama hatası: " + error.message;
-            }
+            // NumVerify API endpoint URL
+            const url = `https://apilayer.com/api/validate?access_key=${apiKey}&number=${phoneNumber}&country_code=&format=1`;
+
+            // Fetch API ile NumVerify API'ye istek gönderiyoruz
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.valid) {
+                        document.getElementById('result').innerHTML = `
+                            <p><strong>Ülke:</strong> ${data.country_name}</p>
+                            <p><strong>Operatör:</strong> ${data.carrier}</p>
+                            <p><strong>Numara Tipi:</strong> ${data.line_type}</p>
+                        `;
+                    } else {
+                        document.getElementById('result').innerHTML = "Geçersiz telefon numarası!";
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('result').innerHTML = `Bir hata oluştu: ${error.message}`;
+                });
         }
     </script>
         <h1>IP ile Konum Bilgisi</h1>
